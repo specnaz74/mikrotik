@@ -1,3 +1,39 @@
+#################### Nem fontos
+/interface bridge
+add name=bridge1
+/interface wireless security-profiles
+set [ find default=yes ] supplicant-identity=MikroTik
+add authentication-types=wpa2-psk eap-methods="" mode=dynamic-keys name=\
+    profile1 supplicant-identity="" wpa2-pre-shared-key=00000000
+/interface wireless
+set [ find default-name=wlan1 ] band=2ghz-onlyn channel-width=20/40mhz-eC \
+    country=russia disabled=no frequency=auto mode=ap-bridge \
+    security-profile=profile1 ssid=MikroTik wireless-protocol=802.11 \
+    wps-mode=disabled
+/ip pool
+add name=dhcp_pool0 ranges=10.74.8.200-10.74.8.254
+/ip dhcp-server
+add address-pool=dhcp_pool0 disabled=no interface=bridge1 lease-time=1h10m \
+    name=dhcp1
+/user group
+set full policy="local,telnet,ssh,ftp,reboot,read,write,policy,test,winbox,pas\
+    sword,web,sniff,sensitive,api,romon,dude,tikapp"
+/interface bridge port
+add bridge=bridge1 interface=ether3
+add bridge=bridge1 interface=ether4
+add bridge=bridge1 interface=ether5
+add bridge=bridge1 interface=wlan1
+/ip address
+add address=10.74.8.1/24 interface=bridge1 network=10.74.8.0
+/ip cloud
+set update-time=no
+/ip dhcp-server network
+add address=10.74.8.0/24 dns-server=10.74.8.1,8.8.8.8 gateway=10.74.8.1
+/ip dns
+set allow-remote-requests=yes
+/system ntp client
+set enabled=yes primary-ntp=193.224.45.107 secondary-ntp=193.224.45.106
+#################### Nem fontos vege
 /ip dhcp-client
 add add-default-route=no disabled=no interface=ether1
 add add-default-route=no disabled=no interface=ether2
