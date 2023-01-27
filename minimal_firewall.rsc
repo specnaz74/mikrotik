@@ -21,6 +21,11 @@ add action=accept chain=forward comment=\
 add action=drop chain=forward comment="drop invalid" connection-state=invalid
 add action=drop chain=forward comment="drop all from WAN not DSTNATed" \
     connection-nat-state=!dstnat connection-state=new in-interface=ether1
+add action=accept chain=input in-interface=ether1 protocol=ipsec-esp \
+    comment="allow L2TP VPN (ipsec-esp)"
+add action=accept chain=input dst-port=500,1701,4500 in-interface=ether1 protocol=udp \
+    comment="allow L2TP VPN (500,4500,1701/udp)"
+
 /ip firewall nat
 add action=masquerade chain=srcnat out-interface=ether1
 /caps-man channel
